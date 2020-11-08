@@ -249,4 +249,38 @@ public class EmployeePayrollService {
 		});
 		System.out.println(this.employeePayrollList);
 	}
+	
+	/**
+	 * THREADS UC 2
+	 * 
+	 * adding multiple employees to payroll with thread
+	 * 
+	 * @param employeeDataList
+	 */
+	public void addMultipleEmployeesToPayrollWithThreads(List<EmployeePayrollData> employeeDataList) {
+		Map<Integer, Boolean> employeeAdditionStatus = new HashMap<Integer, Boolean>();
+		employeeDataList.forEach(employee -> {
+			Runnable task = () -> {
+				employeeAdditionStatus.put(employee.hashCode(), false);
+				System.out.println("Employee Being Added: " + Thread.currentThread().getName());
+				try {
+					employeePayrollDBService.addEmployeeToPayroll(employee.name, employee.gender, employee.salary,
+							employee.startDate, employee.departments);
+				} catch (SQLException | PayrollServiceDBException e) {
+					System.out.println(e.getMessage());
+				}
+				employeeAdditionStatus.put(employee.hashCode(), true);
+				System.out.println("Employee Added: " + Thread.currentThread().getName());
+			};
+			Thread thread = new Thread(task, employee.name);
+			thread.start();
+		});
+		while (employeeAdditionStatus.containsValue(false)) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
 }
