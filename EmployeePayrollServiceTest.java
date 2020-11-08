@@ -124,7 +124,7 @@ public class EmployeePayrollServiceTest {
 	}
 	
 	/**
-	 * THREADS UC 1
+	 * THREADS UC 2
 	 * 
 	 */
 	@Test
@@ -136,10 +136,15 @@ public class EmployeePayrollServiceTest {
 		employeePayrollService.addMultipleEmployeesToPayroll(Arrays.asList(arrayOfEmp));
 		Instant end = Instant.now();
 		System.out.println("Duration without Thread: " + Duration.between(start, end));
+		
+		Instant threadStart = Instant.now();
+		employeePayrollService.addMultipleEmployeesToPayrollWithThreads(Arrays.asList(arrayOfEmp));
+		Instant threadEnd = Instant.now();
+		System.out.println("Duration with Thread: " + Duration.between(threadStart, threadEnd));
+		
 		employeePayrollData = employeePayrollService.readEmployeeData(IOService.DB_IO);
 		assertEquals(4, employeePayrollData.size());
 	}
 	
-
 }
 
