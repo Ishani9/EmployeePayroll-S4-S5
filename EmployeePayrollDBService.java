@@ -14,9 +14,16 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class EmployeePayrollDBService {
+	
 	private static EmployeePayrollDBService employeePayrollDBService;
 	private PreparedStatement employeePayrollDataPrepareStatement;
+	private int connectionCounter = 0;
+	private static final Logger LOG = LogManager.getLogger(EmployeePayrollDBService.class);
+
 
 	private EmployeePayrollDBService() {
 
@@ -45,11 +52,16 @@ public class EmployeePayrollDBService {
 		String userName = "root";
 		String password = "root";
 		Connection connection = null;
+		connectionCounter++;
 
 		try {
-			System.out.println("Connecting to database:" + jdbcURL);
+			//System.out.println("Connecting to database:" + jdbcURL);
+			LOG.info("Processing Thread: " + Thread.currentThread().getName() + " Connecting to database with Id: "
+					+ connectionCounter + "  URL : " + jdbcURL);
 			connection = DriverManager.getConnection(jdbcURL, userName, password);
-			System.out.println("Connection is successful!" + connection);
+			//System.out.println("Connection is successful!" + connection);
+			LOG.info("Processing Thread: " + Thread.currentThread().getName() + " Connecting to database with Id: "
+					+ connectionCounter + " Connection is successfull!!" + connection);
 		} catch (Exception exception) {
 			throw new PayrollServiceDBException("Connection is not successful");
 		}
