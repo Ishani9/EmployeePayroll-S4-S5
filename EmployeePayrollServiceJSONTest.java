@@ -127,7 +127,25 @@ public class EmployeePayrollServiceJSONTest {
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmp));
 		long entries = employeePayrollService.countEntries(IOService.REST_IO);
 		assertEquals(12,entries);
-
+	}
+	
+	/**
+	 * REST UC 5
+	 * 
+	 */
+	@Test
+	public void givenEmployeeToDelete_WhenDeleted_ShouldMatch200ResponseAndCount() {
+		EmployeePayrollData[] arrayOfEmp = getEmployeeList();
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmp));
+		EmployeePayrollData employee = employeePayrollService.getEmployeePayrollData("Jeff");
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		Response response = request.delete("/employees/" + employee.id);
+		int statusCode = response.getStatusCode();
+		assertEquals(200, statusCode);
+		employeePayrollService.deleteEmployeeJSON(employee.name);
+		long count = employeePayrollService.countEntries(IOService.REST_IO);
+		assertEquals(11, count);
 	}
 }
 

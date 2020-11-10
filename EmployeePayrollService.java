@@ -40,12 +40,12 @@ public class EmployeePayrollService {
 	 * @param name
 	 * @return
 	 */
-	private EmployeePayrollData getEmployeePayrollData(String name) {
+	public EmployeePayrollData getEmployeePayrollData(String name) {
 		EmployeePayrollData employeePayrollData = this.employeePayrollList.stream()
 				.filter(employeePayrollDataItem -> employeePayrollDataItem.name.equals(name)).findFirst().orElse(null);
 		return employeePayrollData;
 	}
-
+	
 	/**
 	 * reads employee data from database and returns list of employee payroll data
 	 * 
@@ -372,5 +372,17 @@ public class EmployeePayrollService {
 			count = employeePayrollList.size();
 		}
 		return count;
+	}
+	
+	/**
+	 * REST UC 5
+	 * 
+	 * deleting data from JSON server
+	 * 
+	 * @param name
+	 */
+	public void deleteEmployeeJSON(String name) {
+		EmployeePayrollData employee = this.getEmployeePayrollData(name);
+		employeePayrollList.remove(employee);
 	}
 }
