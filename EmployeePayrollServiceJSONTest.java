@@ -98,6 +98,10 @@ public class EmployeePayrollServiceJSONTest {
 		assertEquals(9, count);
 	}
 	
+	/**
+	 * REST UC 3
+	 * 
+	 */
 	@Test
 	public void givenNewSalaryForEmployee_WhenUpdated_ShouldMatch200Request() {
 		EmployeePayrollData[] arrayOfEmp = getEmployeeList();
@@ -111,6 +115,19 @@ public class EmployeePayrollServiceJSONTest {
 		Response response = request.put("/employees/" + employee.id);
 		int statusCode = response.getStatusCode();
 		assertEquals(200, statusCode);
+	}
+	
+	/**
+	 * REST UC 4
+	 * 
+	 */
+	@Test
+	public void givenEmployeeDataInJSONServer_WhenRetrieved_ShouldMatchTheCount() {
+		EmployeePayrollData[] arrayOfEmp = getEmployeeList();
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmp));
+		long entries = employeePayrollService.countEntries(IOService.REST_IO);
+		assertEquals(12,entries);
+
 	}
 }
 
