@@ -3,6 +3,7 @@ package com.bl.jdbcassignment;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,11 @@ public class EmployeePayrollService {
 	 */
 	public EmployeePayrollService() {
 		employeePayrollDBService = EmployeePayrollDBService.getInstance();
+	}
+	
+	public EmployeePayrollService(List<EmployeePayrollData> empList) {
+		this();
+		employeePayrollList = empList;
 	}
 
 	/**
@@ -186,7 +192,7 @@ public class EmployeePayrollService {
 		return genderComputedMap;
 	}
 	
-	/**
+	/**=========================
 	 * UC 7
 	 * 
 	 * adds employee details to database
@@ -201,6 +207,15 @@ public class EmployeePayrollService {
 		try {
 			employeePayrollDBService.addEmployeeToPayrollUC9(name, gender, salary, date);
 		} catch (PayrollServiceDBException exception) {
+			System.out.println(exception.getMessage());
+		}
+	}
+	
+	public void addEmployeeToPayroll(String name, String gender, double salary, LocalDate date,
+			List<String> departments) {
+		try {
+			employeePayrollDBService.addEmployeeToPayroll(name, gender, salary, date, departments);
+		} catch (PayrollServiceDBException | SQLException exception) {
 			System.out.println(exception.getMessage());
 		}
 	}
@@ -338,5 +353,24 @@ public class EmployeePayrollService {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * REST UC 1
+	 * 
+	 * Adding employee object to payroll added to json
+	 * 
+	 * @param employee
+	 */
+	public void addEmployeeToPayroll(EmployeePayrollData employee) {
+		addEmployeeToPayroll(employee.name, employee.gender, employee.salary, employee.startDate, Arrays.asList(""));
+	}
+
+	public int countEntries(IOService io) {
+		int count = 0;
+		if (io.equals(IOService.REST_IO)) {
+			count = employeePayrollList.size();
+		}
+		return count;
 	}
 }
